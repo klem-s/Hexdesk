@@ -1,0 +1,40 @@
+.wrap {
+  position: relative;
+  width: var(--size, 76px);
+  height: var(--size, 76px);
+}
+
+.ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: conic-gradient(var(--accent) calc(var(--progress, 0) * 1turn), transparent 0);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.ring.visible {
+  opacity: 1;
+}
+
+.circle {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(155deg, var(--c1), var(--c2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: calc(var(--size, 76px) * 0.34);
+  color: var(--text-bright);
+  border: 2px solid var(--border-strong);
+  z-index: 1;
+}
+
+.me .circle {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}

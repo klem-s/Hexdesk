@@ -12,7 +12,7 @@ import (
 	webview "github.com/jchv/go-webview2"
 )
 
-//go:embed ui.html
+//go:embed web/dist/index.html
 var uiHTML string
 
 func bindJSON(w webview.WebView, name string, fn func() (interface{}, error)) {

@@ -37,7 +37,9 @@ type SearchState struct {
 }
 
 type ReadyCheck struct {
-	State string `json:"state"` // "Invalid" | "InProgress" | "Accepted" | "Declined"
+	State          string  `json:"state"`          // "Invalid" | "InProgress" | "Accepted" | "Declined"
+	PlayerResponse string  `json:"playerResponse"` // the local player's own response: "None" | "Accepted" | "Declined"
+	Timer          float64 `json:"timer"`          // seconds left to respond
 }
 
 // memberName prefers the modern Riot ID (gameName#tagLine) over the legacy
@@ -204,7 +206,11 @@ func getReadyCheck(c *lcuClient) (ReadyCheck, error) {
 		return ReadyCheck{State: "Invalid"}, nil
 	}
 	m := asMap(v)
-	return ReadyCheck{State: asString(m["state"])}, nil
+	return ReadyCheck{
+		State:          asString(m["state"]),
+		PlayerResponse: asString(m["playerResponse"]),
+		Timer:          asFloat(m["timer"]),
+	}, nil
 }
 
 func acceptReady(c *lcuClient) error {

@@ -1,0 +1,108 @@
+.slot {
+  width: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatarWrap {
+  position: relative;
+}
+
+.name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--text-bright);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.crown {
+  color: var(--gold);
+  font-size: 13px;
+}
+
+.chips {
+  position: relative;
+  display: flex;
+  gap: 6px;
+}
+
+.chip {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  padding: 3px 9px;
+  border-radius: 20px;
+  border: 1px solid var(--border-strong);
+  background: transparent;
+  color: var(--text-dim);
+}
+
+.chip.filled {
+  background: var(--accent-dim);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.chip.editable {
+  cursor: pointer;
+  background: var(--bg-tile);
+  color: var(--text);
+}
+
+.chip.editable:hover {
+  border-color: var(--border-strong);
+  color: var(--text-bright);
+}
+
+.chip.filled.editable:hover {
+  border-color: var(--accent);
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  padding: 0;
+}
+
+.dashedCircle {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  border: 2px dashed var(--border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: 300;
+  color: var(--text-dim);
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.empty:hover .dashedCircle {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.inviteLabel {
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}

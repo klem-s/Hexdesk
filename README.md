@@ -23,6 +23,8 @@ Both tabs have a collapsible "Raw" section showing exactly what the League clien
 
 Like LoL Remote, this reads the port and auth token for the League client's local **LCU API** off the running `LeagueClientUx.exe` process (via PowerShell), so it works regardless of where League is installed. See `lcu.go`.
 
+The UI itself lives in `web/` — a React + TypeScript app, built to a single self-contained `web/dist/index.html` (via `vite-plugin-singlefile`, no separate JS/CSS files) and embedded into the Go binary with `go:embed`. It talks to Go purely through WebView2's `Bind()` (see `main.go`) — every `window.<fn>()` call it makes resolves to a JSON string the Go side marshaled, no HTTP involved. `web/src/devMock.ts` stands in for those bindings during `npm run dev` so the UI is previewable without a running League client; it's excluded from the production build.
+
 ## Things to watch for
 
 - **The wallet endpoint is unverified against a live client.** Riot has moved and renamed this endpoint across patches, and I found no current public documentation for it. `wallet.go` tries, in order:
@@ -35,14 +37,18 @@ Like LoL Remote, this reads the port and auth token for the League client's loca
 - Queue IDs (420/440/490/450/1700) come from Riot's own published [`queues.json`](https://static.developer.riotgames.com/docs/lol/queues.json) — not a guess, unlike most of what this project touches.
 - The LCU isn't an official API: endpoints can change after a patch, same caveat as LoL Remote.
 - This project (and LoL Remote) is registered with Riot per their Developer Policies; the use of undocumented endpoints like the wallet one above is exactly the kind of thing flagged for their review.
+- The ready-check overlay shows a real countdown (`timer` field) and your own accept/decline response (`playerResponse`), but **not** teammates' live accept status — that endpoint doesn't expose other players' responses to a non-leader client, so this app doesn't fake it either.
 
 ## Building from source
 
+The UI has to be built before the Go binary, since it's embedded via `go:embed`:
+
 ```
+cd web && npm ci && npm run build && cd ..
 GOOS=windows GOARCH=amd64 go build -ldflags="-s -w -H=windowsgui" -o hexdesk.exe .
 ```
 
-One dependency, no cgo: [`jchv/go-webview2`](https://github.com/jchv/go-webview2) (pure-Go binding to Windows' WebView2 control — same one LoL Remote's popup uses).
+One Go dependency, no cgo: [`jchv/go-webview2`](https://github.com/jchv/go-webview2) (pure-Go binding to Windows' WebView2 control — same one LoL Remote's popup uses).
 
 ## Publishing a release
 

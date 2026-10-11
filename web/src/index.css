@@ -1,0 +1,68 @@
+:root {
+  --bg: #0a0d13;
+  --bg-panel: #10141c;
+  --bg-raised: #161b26;
+  --bg-tile: #131824;
+  --bg-tile-hover: #1a2130;
+  --border: #242b3a;
+  --border-strong: #38435a;
+  --text: #aab2c8;
+  --text-dim: #656d81;
+  --text-bright: #eef1fa;
+  --accent: #35d6b8;
+  --accent-strong: #1fb79b;
+  --accent-dim: rgba(53, 214, 184, 0.14);
+  --accent-text: #0a0d13;
+  --gold: #e8bb4e;
+  --danger: #e2566d;
+  --danger-dim: rgba(226, 86, 109, 0.16);
+  --shadow-deep: 0 20px 48px rgba(0, 0, 0, 0.55);
+
+  --font-display: "Rajdhani", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Inter", "Segoe UI", system-ui, sans-serif;
+
+  color-scheme: dark;
+  color: var(--text);
+  background: var(--bg);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: var(--bg);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -webkit-user-select: text;
+}
+
+#root {
+  height: 100%;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--accent-dim);
+}
