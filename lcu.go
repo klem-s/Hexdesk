@@ -60,7 +60,16 @@ func (c *lcuClient) discover() error {
 	return nil
 }
 
-func (c *lcuClient) get(path string) (interface{}, error) {
+func (c *lcuClient) get(path string) (interface{}, error) { return c.request("GET", path, nil) }
+func (c *lcuClient) post(path string, body interface{}) (interface{}, error) {
+	return c.request("POST", path, body)
+}
+func (c *lcuClient) put(path string, body interface{}) (interface{}, error) {
+	return c.request("PUT", path, body)
+}
+func (c *lcuClient) delete(path string) (interface{}, error) { return c.request("DELETE", path, nil) }
+
+func (c *lcuClient) request(method, path string, body interface{}) (interface{}, error) {
 	c.mu.Lock()
 	port, pass := c.port, c.pass
 	c.mu.Unlock()
@@ -73,11 +82,21 @@ func (c *lcuClient) get(path string) (interface{}, error) {
 		c.mu.Unlock()
 	}
 
-	req, err := http.NewRequest("GET", "https://127.0.0.1:"+port+path, bytes.NewReader(nil))
+	var reqBody io.Reader
+	if body != nil {
+		b, err := json.Marshal(body)
+		if err != nil {
+			return nil, err
+		}
+		reqBody = bytes.NewReader(b)
+	}
+
+	req, err := http.NewRequest(method, "https://127.0.0.1:"+port+path, reqBody)
 	if err != nil {
 		return nil, err
 	}
 	req.SetBasicAuth("riot", pass)
+	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")
 
 	resp, err := c.http.Do(req)

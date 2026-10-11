@@ -13,71 +13,268 @@
 html,body{margin:0; width:100%; height:100%; overflow:hidden}
 body{
   background:var(--abyss); color:var(--gold-hi);
-  font:15px/1.4 Inter,system-ui,sans-serif;
-  display:flex; flex-direction:column; align-items:center;
-  padding:24px 22px; -webkit-user-select:text;
+  font:14px/1.4 Inter,system-ui,sans-serif;
+  display:flex; flex-direction:column;
+  -webkit-user-select:text;
 }
-h1{font:400 20px Marcellus,Georgia,serif; color:var(--gold); margin:0 0 20px; letter-spacing:.02em}
-.wallet{display:flex; gap:14px; width:100%}
-.currency{
-  flex:1; background:var(--deep); border:1px solid var(--line); border-radius:4px;
-  padding:14px 10px; text-align:center;
+h1{font:400 18px Marcellus,Georgia,serif; color:var(--gold); margin:0; letter-spacing:.02em}
+h2{font:400 13px Marcellus,Georgia,serif; color:var(--gold); margin:0 0 8px}
+header{display:flex; align-items:center; justify-content:space-between; padding:14px 18px 10px}
+nav.tabs{display:flex; border-bottom:1px solid var(--line); padding:0 18px}
+nav.tabs button{flex:1; background:none; border:0; border-bottom:2px solid transparent; color:var(--muted);
+  padding:9px; font:600 12px Inter,sans-serif; cursor:pointer}
+nav.tabs button[aria-selected=true]{color:var(--gold-hi); border-bottom-color:var(--gold)}
+.pane{flex:1; overflow-y:auto; padding:14px 18px 18px}
+[hidden]{display:none!important}
+
+/* queue tiles */
+.queues{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px}
+.queue{
+  background:var(--deep); border:1px solid var(--line); border-radius:4px;
+  padding:10px; cursor:pointer; text-align:left;
 }
+.queue.sel{border-color:var(--teal); box-shadow:0 0 0 1px var(--teal)}
+.queue .name{display:block; font:600 13px Inter,sans-serif; color:var(--gold-hi); margin-bottom:4px}
+
+/* party */
+.party{display:flex; gap:10px; margin-bottom:10px; flex-wrap:wrap}
+.member{width:76px; text-align:center}
+.avatar{
+  width:56px; height:56px; border-radius:50%; margin:0 auto 6px;
+  background:var(--deep); border:2px solid var(--line);
+  display:flex; align-items:center; justify-content:center; font:400 20px Marcellus,serif; color:var(--muted);
+}
+.member.leader .avatar{border-color:var(--gold)}
+.member .name{font-size:11px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.member .crown{color:var(--gold); font-size:10px}
+.roles{display:flex; gap:3px; justify-content:center; margin-top:3px}
+.roleChip{
+  font:600 9px Inter,sans-serif; padding:2px 5px; border-radius:3px; border:1px solid var(--line);
+  color:var(--muted); cursor:default;
+}
+.roleChip.first{background:var(--gold); color:var(--abyss); border-color:var(--gold)}
+.roleChip.second{border-color:var(--teal); color:var(--teal)}
+.member.local .roleChip{cursor:pointer}
+.rolePicker{display:flex; gap:3px; justify-content:center; margin-top:4px; flex-wrap:wrap}
+.rolePicker button{
+  font:600 9px Inter,sans-serif; padding:2px 5px; border-radius:3px; border:1px solid var(--line);
+  background:none; color:var(--muted); cursor:pointer;
+}
+.rolePicker button.on1{background:var(--gold); color:var(--abyss); border-color:var(--gold)}
+.rolePicker button.on2{border-color:var(--teal); color:var(--teal)}
+.hint{font-size:11px; color:var(--muted); margin:4px 0 16px}
+
+/* status bar: idle / searching / found */
+.statusBar{
+  border:1px solid var(--line); border-radius:4px; background:var(--deep);
+  padding:14px; text-align:center;
+}
+.statusBar .big{font:400 22px Marcellus,Georgia,serif; color:var(--gold-hi); font-variant-numeric:tabular-nums}
+.statusBar .sub{font-size:12px; color:var(--muted); margin-top:4px}
+button.act{
+  border:1px solid var(--gold); background:transparent; color:var(--gold-hi); padding:12px 18px;
+  font:600 14px Inter,sans-serif; border-radius:3px; cursor:pointer; width:100%; margin-top:10px;
+}
+button.act.primary{border-color:var(--teal); color:var(--teal)}
+button.act.danger{border-color:var(--red); color:#ff9b9b}
+button.act:disabled{opacity:.35; cursor:default}
+.readyRow{display:flex; gap:8px; margin-top:10px}
+.readyRow button{flex:1; margin-top:0}
+
+/* wallet tab */
+.wallet{display:flex; gap:14px; width:100%; margin-bottom:14px}
+.currency{flex:1; background:var(--deep); border:1px solid var(--line); border-radius:4px; padding:14px 10px; text-align:center}
 .currency .label{font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin:0 0 6px}
 .currency .value{font:600 22px Marcellus,Georgia,serif; color:var(--teal); font-variant-numeric:tabular-nums}
 .currency.rp .value{color:var(--gold)}
-.status{font-size:12px; color:var(--muted); margin:14px 0 0; text-align:center; min-height:1.4em}
+
+.notice{font-size:11px; color:var(--muted); background:var(--deep); border:1px dashed var(--line);
+  border-radius:4px; padding:8px 10px; margin-bottom:14px}
+
+.status{font-size:12px; color:var(--muted); margin:10px 0 0; text-align:center; min-height:1.3em}
 .status.err{color:var(--red)}
-.raw{width:100%; margin-top:16px}
-.raw summary{font-size:12px; color:var(--muted); cursor:pointer}
-.raw pre{
+details.raw{margin-top:14px}
+details.raw summary{font-size:11px; color:var(--muted); cursor:pointer}
+details.raw pre{
   background:var(--deep); border:1px solid var(--line); border-radius:4px;
-  padding:10px; font-size:11px; color:var(--gold-hi); max-height:140px; overflow:auto;
-  white-space:pre-wrap; word-break:break-all; margin:8px 0 0;
+  padding:8px; font-size:10px; color:var(--gold-hi); max-height:160px; overflow:auto;
+  white-space:pre-wrap; word-break:break-all; margin:6px 0 0;
 }
 </style>
 </head>
 <body>
-<h1>Hexdesk</h1>
-<div class="wallet">
-  <div class="currency rp">
-    <p class="label">RP</p>
-    <p class="value" id="rp">—</p>
+<header><h1>Hexdesk</h1></header>
+<nav class="tabs">
+  <button id="tabLobby" aria-selected="true">Lobby</button>
+  <button id="tabWallet" aria-selected="false">Wallet</button>
+</nav>
+
+<section class="pane" id="lobbyPane">
+  <div class="queues" id="queues"></div>
+  <div class="party" id="party"></div>
+  <p class="hint">Filled chip = 1st role, outline = 2nd — click your own to change. Required before queueing.</p>
+  <div class="notice">Party chat isn't shown here — connecting to League's chat system falls under Riot's "don't connect to systems not included in third-party tools" policy, so this stays in the official client.</div>
+  <div class="statusBar" id="statusBar"></div>
+  <p class="status" id="lobbyStatus"></p>
+  <details class="raw"><summary>Raw lobby data</summary><pre id="lobbyRaw">—</pre></details>
+</section>
+
+<section class="pane" id="walletPane" hidden>
+  <div class="wallet">
+    <div class="currency rp"><p class="label">RP</p><p class="value" id="rp">—</p></div>
+    <div class="currency"><p class="label">Blue Essence</p><p class="value" id="be">—</p></div>
   </div>
-  <div class="currency">
-    <p class="label">Blue Essence</p>
-    <p class="value" id="be">—</p>
-  </div>
-</div>
-<p class="status" id="status"></p>
-<details class="raw">
-  <summary>Raw response</summary>
-  <pre id="raw">—</pre>
-</details>
+  <p class="status" id="walletStatus"></p>
+  <details class="raw"><summary>Raw response</summary><pre id="walletRaw">—</pre></details>
+</section>
 
 <script>
-async function refresh(){
-  const statusEl = document.getElementById("status");
-  try {
-    const json = await window.getWallet();
-    const data = JSON.parse(json);
-    if (data.error) {
-      statusEl.textContent = data.error;
-      statusEl.className = "status err";
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+const QUEUES = [
+  {id: 420, name: "Ranked Solo/Duo"},
+  {id: 440, name: "Ranked Flex"},
+  {id: 490, name: "Quickplay"},
+  {id: 450, name: "ARAM"},
+  {id: 1700, name: "Arena"},
+];
+const ROLES = ["TOP","JUNGLE","MIDDLE","BOTTOM","UTILITY"];
+const ROLE_LABEL = {TOP:"TOP", JUNGLE:"JGL", MIDDLE:"MID", BOTTOM:"BOT", UTILITY:"SUP"};
+
+let tab = "lobby";
+let editingRoles = false;
+
+function setTab(t){
+  tab = t;
+  $("tabLobby").setAttribute("aria-selected", t === "lobby");
+  $("tabWallet").setAttribute("aria-selected", t === "wallet");
+  $("lobbyPane").hidden = t !== "lobby";
+  $("walletPane").hidden = t !== "wallet";
+}
+$("tabLobby").onclick = () => setTab("lobby");
+$("tabWallet").onclick = () => setTab("wallet");
+
+function renderQueues(lobby){
+  $("queues").innerHTML = QUEUES.map(q =>
+    `<button class="queue${lobby.queueId === q.id ? " sel" : ""}" data-id="${q.id}">
+      <span class="name">${esc(q.name)}</span>
+    </button>`
+  ).join("");
+  $("queues").onclick = async e => {
+    const b = e.target.closest(".queue"); if (!b) return;
+    try { await window.selectQueue(+b.dataset.id); } catch(e) {}
+    refreshLobby();
+  };
+}
+
+function roleChipsHtml(m){
+  if (m.isLocal && editingRoles) {
+    const row = pref => ROLES.map(r =>
+      `<button class="${pref===1 && m.firstPosition===r ? "on1" : pref===2 && m.secondPosition===r ? "on2" : ""}" data-pref="${pref}" data-role="${r}">${ROLE_LABEL[r]}</button>`
+    ).join("");
+    return `<div class="rolePicker">${row(1)}</div><div class="rolePicker">${row(2)}</div>`;
+  }
+  const chip = (role, cls) => role ? `<span class="roleChip ${cls}">${ROLE_LABEL[role] || role}</span>` : "";
+  return `<div class="roles">${chip(m.firstPosition,"first")}${chip(m.secondPosition,"second")}</div>`;
+}
+
+function renderParty(lobby){
+  const members = lobby.members || [];
+  $("party").innerHTML = members.map(m => `
+    <div class="member${m.isLeader ? " leader" : ""}${m.isLocal ? " local" : ""}" data-id="${m.summonerId}">
+      <div class="avatar">${esc((m.name || "?")[0] || "?")}</div>
+      <div class="name">${m.isLeader ? '<span class="crown">&#9813;</span> ' : ""}${esc(m.name || "…")}</div>
+      ${roleChipsHtml(m)}
+    </div>
+  `).join("") + (members.length < 5
+    ? Array.from({length: 5 - members.length}, () => `<div class="member"><div class="avatar">+</div><div class="name">invite</div></div>`).join("")
+    : "");
+
+  $("party").onclick = async e => {
+    const roleBtn = e.target.closest(".rolePicker button");
+    if (roleBtn) {
+      const local = members.find(m => m.isLocal) || {};
+      let first = local.firstPosition || "", second = local.secondPosition || "";
+      if (roleBtn.dataset.pref === "1") first = roleBtn.dataset.role; else second = roleBtn.dataset.role;
+      try { await window.setRolePreferences(first, second); } catch(e) {}
+      refreshLobby();
       return;
     }
-    document.getElementById("rp").textContent = Math.round(data.rp).toLocaleString();
-    document.getElementById("be").textContent = Math.round(data.blueEssence).toLocaleString();
-    document.getElementById("raw").textContent = data.source + "\n\n" + JSON.stringify(data.raw, null, 2);
-    statusEl.textContent = "";
-    statusEl.className = "status";
-  } catch (e) {
-    statusEl.textContent = String(e);
-    statusEl.className = "status err";
+    const memberEl = e.target.closest(".member.local");
+    if (memberEl) { editingRoles = !editingRoles; renderParty(lastLobby); }
+  };
+}
+
+let lastLobby = {inLobby: false, members: []};
+let lastSearch = {state: "Invalid"};
+let lastReady = {state: "Invalid"};
+
+function renderStatusBar(lobby, search, ready){
+  const bar = $("statusBar");
+  if (ready.state === "InProgress") {
+    bar.innerHTML = `<p class="sub">Match found</p><div class="readyRow">
+      <button class="act primary" id="acceptBtn">Accept</button>
+      <button class="act danger" id="declineBtn">Decline</button>
+    </div>`;
+    $("acceptBtn").onclick = () => window.acceptReady();
+    $("declineBtn").onclick = () => window.declineReady();
+    return;
+  }
+  if (search.state === "Searching") {
+    const mins = Math.floor(search.timeInQueue / 60), secs = Math.floor(search.timeInQueue % 60);
+    bar.innerHTML = `<p class="big">${mins}:${String(secs).padStart(2,"0")}</p>
+      <p class="sub">Searching for match…</p>
+      <button class="act danger" id="cancelBtn">Cancel</button>`;
+    $("cancelBtn").onclick = () => window.cancelSearch();
+    return;
+  }
+  if (!lobby.inLobby) {
+    bar.innerHTML = `<p class="sub">Not in a lobby — pick a queue above to create one.</p>`;
+    return;
+  }
+  if (lobby.isLeader) {
+    bar.innerHTML = `<button class="act primary" id="findBtn" ${lobby.queueId ? "" : "disabled"}>Find match</button>`;
+    $("findBtn").onclick = () => window.findMatch();
+  } else {
+    bar.innerHTML = `<p class="sub">Waiting for the leader to queue…</p>`;
   }
 }
-refresh();
-setInterval(refresh, 5000);
+
+async function refreshLobby(){
+  try {
+    const lobby = JSON.parse(await window.getLobby());
+    const search = JSON.parse(await window.getSearchState());
+    const ready = JSON.parse(await window.getReadyCheck());
+    if (lobby.error) { $("lobbyStatus").textContent = lobby.error; $("lobbyStatus").className = "status err"; return; }
+    lastLobby = lobby; lastSearch = search; lastReady = ready;
+    renderQueues(lobby);
+    renderParty(lobby);
+    renderStatusBar(lobby, search, ready);
+    $("lobbyRaw").textContent = JSON.stringify(lobby.raw, null, 2);
+    $("lobbyStatus").textContent = ""; $("lobbyStatus").className = "status";
+  } catch (e) {
+    $("lobbyStatus").textContent = String(e); $("lobbyStatus").className = "status err";
+  }
+}
+
+async function refreshWallet(){
+  const statusEl = $("walletStatus");
+  try {
+    const data = JSON.parse(await window.getWallet());
+    if (data.error) { statusEl.textContent = data.error; statusEl.className = "status err"; return; }
+    $("rp").textContent = Math.round(data.rp).toLocaleString();
+    $("be").textContent = Math.round(data.blueEssence).toLocaleString();
+    $("walletRaw").textContent = data.source + "\n\n" + JSON.stringify(data.raw, null, 2);
+    statusEl.textContent = ""; statusEl.className = "status";
+  } catch (e) {
+    statusEl.textContent = String(e); statusEl.className = "status err";
+  }
+}
+
+refreshLobby(); refreshWallet();
+setInterval(refreshLobby, 1500);
+setInterval(refreshWallet, 5000);
 </script>
 </body>
 </html>
