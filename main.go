@@ -32,7 +32,7 @@ func main() {
 
 	w := webview.NewWithOptions(webview.WebViewOptions{
 		WindowOptions: webview.WindowOptions{
-			Title: "Hexdesk", Width: 480, Height: 680, Center: true,
+			Title: "Hexdesk", Width: 1280, Height: 720, Center: true,
 		},
 	})
 	if w == nil {
@@ -40,7 +40,7 @@ func main() {
 		os.Exit(1)
 	}
 	defer w.Destroy()
-	w.SetSize(480, 680, webview.HintFixed)
+	w.SetSize(1280, 720, webview.HintFixed)
 
 	bindJSON(w, "getWallet", func() (interface{}, error) { return fetchWallet(client) })
 	bindJSON(w, "getLobby", func() (interface{}, error) { return getLobby(client) })

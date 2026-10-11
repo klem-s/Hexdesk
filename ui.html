@@ -14,9 +14,10 @@ html,body{margin:0; width:100%; height:100%; overflow:hidden}
 body{
   background:var(--abyss); color:var(--gold-hi);
   font:14px/1.4 Inter,system-ui,sans-serif;
-  display:flex; flex-direction:column;
+  display:flex; justify-content:center;
   -webkit-user-select:text;
 }
+.shell{width:100%; max-width:760px; height:100%; display:flex; flex-direction:column}
 h1{font:400 18px Marcellus,Georgia,serif; color:var(--gold); margin:0; letter-spacing:.02em}
 h2{font:400 13px Marcellus,Georgia,serif; color:var(--gold); margin:0 0 8px}
 header{display:flex; align-items:center; justify-content:space-between; padding:14px 18px 10px}
@@ -28,7 +29,7 @@ nav.tabs button[aria-selected=true]{color:var(--gold-hi); border-bottom-color:va
 [hidden]{display:none!important}
 
 /* queue tiles */
-.queues{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px}
+.queues{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:16px}
 .queue{
   background:var(--deep); border:1px solid var(--line); border-radius:4px;
   padding:10px; cursor:pointer; text-align:left;
@@ -103,6 +104,7 @@ details.raw pre{
 </style>
 </head>
 <body>
+<div class="shell">
 <header><h1>Hexdesk</h1></header>
 <nav class="tabs">
   <button id="tabLobby" aria-selected="true">Lobby</button>
@@ -127,6 +129,7 @@ details.raw pre{
   <p class="status" id="walletStatus"></p>
   <details class="raw"><summary>Raw response</summary><pre id="walletRaw">—</pre></details>
 </section>
+</div>
 
 <script>
 const $ = id => document.getElementById(id);
