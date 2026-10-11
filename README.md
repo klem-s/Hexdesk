@@ -35,6 +35,15 @@ GOOS=windows GOARCH=amd64 go build -ldflags="-s -w -H=windowsgui" -o hexdesk.exe
 
 One dependency, no cgo: [`jchv/go-webview2`](https://github.com/jchv/go-webview2) (pure-Go binding to Windows' WebView2 control — same one LoL Remote's popup uses).
 
+## Publishing a release
+
+Every `vX.Y.Z` tag pushed to GitHub triggers CI (`.github/workflows/release.yml`), which builds `hexdesk.exe` for Windows and publishes a Release with the binary attached.
+
+```
+git tag v0.1.0
+git push origin v0.1.0
+```
+
 ---
 
 Hexdesk isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.
