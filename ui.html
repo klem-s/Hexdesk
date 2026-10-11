@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --abyss:#091428; --deep:#0f1e33; --line:#463714; --gold:#c8aa6e; --gold-hi:#f0e6d2;
+  --teal:#0ac8b9; --muted:#7b8a99; --red:#c24b4b;
+}
+*{box-sizing:border-box}
+html,body{margin:0; width:100%; height:100%; overflow:hidden}
+body{
+  background:var(--abyss); color:var(--gold-hi);
+  font:15px/1.4 Inter,system-ui,sans-serif;
+  display:flex; flex-direction:column; align-items:center;
+  padding:24px 22px; -webkit-user-select:text;
+}
+h1{font:400 20px Marcellus,Georgia,serif; color:var(--gold); margin:0 0 20px; letter-spacing:.02em}
+.wallet{display:flex; gap:14px; width:100%}
+.currency{
+  flex:1; background:var(--deep); border:1px solid var(--line); border-radius:4px;
+  padding:14px 10px; text-align:center;
+}
+.currency .label{font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin:0 0 6px}
+.currency .value{font:600 22px Marcellus,Georgia,serif; color:var(--teal); font-variant-numeric:tabular-nums}
+.currency.rp .value{color:var(--gold)}
+.status{font-size:12px; color:var(--muted); margin:14px 0 0; text-align:center; min-height:1.4em}
+.status.err{color:var(--red)}
+.raw{width:100%; margin-top:16px}
+.raw summary{font-size:12px; color:var(--muted); cursor:pointer}
+.raw pre{
+  background:var(--deep); border:1px solid var(--line); border-radius:4px;
+  padding:10px; font-size:11px; color:var(--gold-hi); max-height:140px; overflow:auto;
+  white-space:pre-wrap; word-break:break-all; margin:8px 0 0;
+}
+</style>
+</head>
+<body>
+<h1>Hexdesk</h1>
+<div class="wallet">
+  <div class="currency rp">
+    <p class="label">RP</p>
+    <p class="value" id="rp">—</p>
+  </div>
+  <div class="currency">
+    <p class="label">Blue Essence</p>
+    <p class="value" id="be">—</p>
+  </div>
+</div>
+<p class="status" id="status"></p>
+<details class="raw">
+  <summary>Raw response</summary>
+  <pre id="raw">—</pre>
+</details>
+
+<script>
+async function refresh(){
+  const statusEl = document.getElementById("status");
+  try {
+    const json = await window.getWallet();
+    const data = JSON.parse(json);
+    if (data.error) {
+      statusEl.textContent = data.error;
+      statusEl.className = "status err";
+      return;
+    }
+    document.getElementById("rp").textContent = Math.round(data.rp).toLocaleString();
+    document.getElementById("be").textContent = Math.round(data.blueEssence).toLocaleString();
+    document.getElementById("raw").textContent = data.source + "\n\n" + JSON.stringify(data.raw, null, 2);
+    statusEl.textContent = "";
+    statusEl.className = "status";
+  } catch (e) {
+    statusEl.textContent = String(e);
+    statusEl.className = "status err";
+  }
+}
+refresh();
+setInterval(refresh, 5000);
+</script>
+</body>
+</html>
