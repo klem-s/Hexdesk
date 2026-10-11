@@ -38,6 +38,20 @@ type ReadyCheck struct {
 	State string `json:"state"` // "Invalid" | "InProgress" | "Accepted" | "Declined"
 }
 
+// memberName prefers the modern Riot ID (gameName#tagLine) over the legacy
+// summonerName field — LoL Remote hit the same thing in champ-select data,
+// where player objects carry gameName/tagLine, not summonerName.
+func memberName(mm map[string]interface{}) string {
+	name := asString(mm["gameName"])
+	if name == "" {
+		return asString(mm["summonerName"])
+	}
+	if tag := asString(mm["tagLine"]); tag != "" {
+		return name + "#" + tag
+	}
+	return name
+}
+
 func getLobby(c *lcuClient) (Lobby, error) {
 	v, err := c.get("/lol-lobby/v2/lobby")
 	if err != nil {
@@ -61,7 +75,7 @@ func getLobby(c *lcuClient) (Lobby, error) {
 		}
 		members = append(members, Member{
 			SummonerID: int64(id),
-			Name:       asString(mm["summonerName"]),
+			Name:       memberName(mm),
 			IsLeader:   leader,
 			FirstPos:   asString(mm["firstPositionPreference"]),
 			SecondPos:  asString(mm["secondPositionPreference"]),
