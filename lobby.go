@@ -81,7 +81,8 @@ func getLobby(c *lcuClient) (Lobby, error) {
 // selectQueue creates or switches the local lobby to a given queue. Solo
 // lobby only (no pre-made party invite flow yet).
 func selectQueue(c *lcuClient, queueID int) error {
-	_, err := c.put("/lol-lobby/v2/lobby", map[string]interface{}{"queueId": queueID})
+	// POST, not PUT — confirmed against a real "WRONG_METHOD" 405 response.
+	_, err := c.post("/lol-lobby/v2/lobby", map[string]interface{}{"queueId": queueID})
 	return err
 }
 
